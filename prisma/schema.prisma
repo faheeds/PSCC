@@ -1,0 +1,534 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+enum MemberStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum T40Team {
+  STEELHEADS
+  CHINOOKS
+  SOCKEYES
+}
+
+enum T20Team {
+  STEELHEADS
+  CHINOOKS
+  SOCKEYES
+  COHOS
+}
+
+enum GameStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum LedgerCategory {
+  CLUB_FEE
+  GAME_FEE
+  UNIFORM
+  PAYMENT
+  ADJUSTMENT
+  CREDIT
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum AdminExpenseStatus {
+  SUBMITTED
+  REVIEWED
+  REIMBURSED
+}
+
+enum GroundBookingStatus {
+  REQUESTED
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum GroundPaymentStatus {
+  PENDING
+  PARTIALLY_PAID
+  PAID
+  WAIVED
+}
+
+enum GroundUsageType {
+  PSCC_TEAM
+  EXTERNAL_CLUB
+  SHARED
+  CLUB_EVENT
+  PSCC_PRACTICE
+  PSCC_LEAGUE
+  OTHER_CLUB_LEAGUE
+  OTHER_CLUB_OTHER
+  OTHER_PURPOSE
+}
+
+enum MediaContentType {
+  PHOTO
+  VIDEO
+  ALBUM
+  REEL
+  STORY
+  OTHER
+}
+
+enum SocialPostStatus {
+  DRAFT
+  READY_TO_POST
+  SCHEDULED
+  POSTED
+  ARCHIVED
+}
+
+enum CommunicationAudience {
+  ALL_MEMBERS
+  ADMINS
+  TEAM_CAPTAINS
+  LEAGUE
+  EXTERNAL_PARTNERS
+  CUSTOM
+}
+
+enum CommunicationChannel {
+  EMAIL
+  WHATSAPP
+  SMS
+  PHONE
+  IN_PERSON
+  OTHER
+}
+
+enum CommunicationStatus {
+  DRAFT
+  SCHEDULED
+  SENT
+  COMPLETED
+}
+
+enum PracticeStatus {
+  PLANNED
+  COMPLETED
+  CANCELLED
+}
+
+enum EquipmentCondition {
+  NEW
+  GOOD
+  FAIR
+  NEEDS_REPAIR
+  RETIRED
+}
+
+enum EquipmentTransactionType {
+  PURCHASE
+  ISSUE
+  RETURN
+  DAMAGE
+  LOSS
+  REPAIR
+  STOCK_ADJUSTMENT
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  BLOCKED
+  COMPLETED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum MemberMediaType {
+  PHOTO
+  VIDEO
+}
+
+enum MemberMediaStatus {
+  SUBMITTED
+  REVIEWED
+  APPROVED
+  ARCHIVED
+}
+
+model AdminUser {
+  id             String             @id @default(cuid())
+  email          String             @unique
+  name           String
+  passwordHash   String?
+  image          String?
+  phone          String?
+  title          String?
+  zelleEmail     String?
+  zellePhone     String?
+  authProvider   String?
+  authProviderId String?            @unique
+  role           UserRole           @default(ADMIN)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  expenses       AdminExpense[]
+  groundBookings GroundBooking[]    @relation("GroundBookedBy")
+  socialItems    SocialContentItem[] @relation("SocialCreatedBy")
+  communications CommunicationMessage[] @relation("CommunicationCreatedBy")
+  leagueContacts LeagueContactLog[] @relation("LeagueLoggedBy")
+  practices      PracticeSession[]  @relation("PracticeCoordinatedBy")
+  equipmentLogs  EquipmentTransaction[] @relation("EquipmentPerformedBy")
+  createdTasks   ClubTask[]         @relation("TaskCreatedBy")
+  assignedTasks  ClubTask[]         @relation("TaskAssignedTo")
+  reviewedMemberMedia MemberMediaSubmission[] @relation("MemberMediaReviewedBy")
+}
+
+model Member {
+  id             String             @id @default(cuid())
+  email          String             @unique
+  name           String
+  phone          String?
+  jerseySize     String?
+  t40Team        T40Team?
+  t20Team        T20Team?
+  passwordHash   String?
+  image          String?
+  authProvider   String?
+  authProviderId String?            @unique
+  status         MemberStatus       @default(ACTIVE)
+  memberSince    DateTime           @default(now())
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  participations GameParticipation[]
+  ledgerEntries  LedgerEntry[]
+  payments       Payment[]
+  mediaSubmissions MemberMediaSubmission[]
+  practiceCheckIns PracticeCheckIn[]
+}
+
+model GameType {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  feeCents    Int
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  games       Game[]
+}
+
+model Game {
+  id             String              @id @default(cuid())
+  gameTypeId     String
+  title          String
+  opponent       String?
+  venue          String?
+  gameDate       DateTime
+  status         GameStatus          @default(SCHEDULED)
+  notes          String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  gameType       GameType            @relation(fields: [gameTypeId], references: [id], onDelete: Restrict)
+  participations GameParticipation[]
+}
+
+model GameParticipation {
+  id                String       @id @default(cuid())
+  memberId          String
+  gameId            String
+  feeCents          Int
+  notes             String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  member            Member       @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  game              Game         @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  ledgerEntry       LedgerEntry?
+
+  @@unique([memberId, gameId])
+}
+
+model LedgerEntry {
+  id                  String             @id @default(cuid())
+  memberId            String
+  category            LedgerCategory
+  description         String
+  amountCents         Int
+  occurredAt          DateTime           @default(now())
+  gameParticipationId String?            @unique
+  paymentId           String?            @unique
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  member              Member             @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  gameParticipation   GameParticipation? @relation(fields: [gameParticipationId], references: [id], onDelete: SetNull)
+  payment             Payment?           @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  memberId          String
+  provider          String        @default("stripe")
+  checkoutSessionId String?       @unique
+  paymentIntentId   String?       @unique
+  amountCents       Int
+  currency          String        @default("usd")
+  status            PaymentStatus @default(PENDING)
+  paidAt            DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  member            Member        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  ledgerEntry       LedgerEntry?
+}
+
+model ProcessedWebhookEvent {
+  id          String   @id @default(cuid())
+  provider    String
+  eventId     String   @unique
+  eventType   String
+  processedAt DateTime @default(now())
+}
+
+model AdminExpense {
+  id                 String             @id @default(cuid())
+  adminUserId        String
+  title              String
+  notes              String?
+  amountCents        Int
+  expenseDate        DateTime
+  invoicePath        String?
+  invoiceFileName    String?
+  reimbursementEmail String?
+  reimbursementPhone String?
+  status             AdminExpenseStatus @default(SUBMITTED)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  reimbursedAt       DateTime?
+  adminUser          AdminUser          @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+}
+
+model GroundBooking {
+    id                String              @id @default(cuid())
+    importKey         String?             @unique
+    title             String
+    groundName        String
+    facilityName      String?
+    cityContactName   String?
+    cityContactEmail  String?
+    cityContactPhone  String?
+    permitReference   String?
+    sourceDocumentName String?
+    authorizedAt      DateTime?
+    bookingDate       DateTime
+    startAt           DateTime
+    endAt             DateTime
+    status            GroundBookingStatus @default(REQUESTED)
+    paymentStatus     GroundPaymentStatus @default(PENDING)
+    costCents         Int                 @default(0)
+    paidCents         Int                 @default(0)
+    balanceDueCents   Int                 @default(0)
+    amountRecoveredCents Int              @default(0)
+    notes             String?
+    bookedByAdminId   String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  bookedBy          AdminUser?          @relation("GroundBookedBy", fields: [bookedByAdminId], references: [id], onDelete: SetNull)
+  allocations       GroundAllocation[]
+}
+
+model GroundAllocation {
+  id              String          @id @default(cuid())
+  groundBookingId String
+  usageType       GroundUsageType @default(PSCC_TEAM)
+  allocatedToName String
+  amountCents     Int             @default(0)
+  notes           String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  groundBooking   GroundBooking   @relation(fields: [groundBookingId], references: [id], onDelete: Cascade)
+}
+
+model SocialContentItem {
+  id               String           @id @default(cuid())
+  title            String
+  contentType      MediaContentType @default(PHOTO)
+  eventTitle       String?
+  capturedAt       DateTime?
+  sourceUrl        String?
+  caption          String?
+  hashtags         String?
+  platforms        String?
+  status           SocialPostStatus @default(DRAFT)
+  scheduledFor     DateTime?
+  postedAt         DateTime?
+  notes            String?
+  createdByAdminId String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  createdBy        AdminUser?       @relation("SocialCreatedBy", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+}
+
+model CommunicationMessage {
+  id               String                @id @default(cuid())
+  subject          String
+  audience         CommunicationAudience @default(ALL_MEMBERS)
+  channel          CommunicationChannel  @default(EMAIL)
+  status           CommunicationStatus   @default(DRAFT)
+  targetGroup      String?
+  body             String
+  summary          String?
+  scheduledFor     DateTime?
+  sentAt           DateTime?
+  createdByAdminId String?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  createdBy        AdminUser?            @relation("CommunicationCreatedBy", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+}
+
+model LeagueContactLog {
+  id               String               @id @default(cuid())
+  subject          String
+  counterpartName  String?
+  counterpartOrg   String               @default("NWCL")
+  channel          CommunicationChannel @default(EMAIL)
+  contactAt        DateTime
+  summary          String
+  actionItems      String?
+  nextStep         String?
+  createdByAdminId String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  createdBy        AdminUser?           @relation("LeagueLoggedBy", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+}
+
+model PracticeSession {
+  id                String         @id @default(cuid())
+  recurrenceKey     String?        @unique
+  title             String
+  location          String
+  startsAt          DateTime
+  endsAt            DateTime
+  status            PracticeStatus @default(PLANNED)
+  cancellationReason String?
+  focusArea         String?
+  expectedAttendance Int?
+  actualAttendance  Int?
+  checkInLatitude   Float?
+  checkInLongitude  Float?
+  checkInRadiusMeters Int         @default(200)
+  notes             String?
+  coordinatorId     String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  coordinator       AdminUser?     @relation("PracticeCoordinatedBy", fields: [coordinatorId], references: [id], onDelete: SetNull)
+  checkIns          PracticeCheckIn[]
+}
+
+model PracticeCheckIn {
+  id                String          @id @default(cuid())
+  practiceSessionId String
+  memberId          String
+  arrivalOrder      Int
+  checkedInAt       DateTime        @default(now())
+  latitude          Float
+  longitude         Float
+  distanceMeters    Int?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  practiceSession   PracticeSession @relation(fields: [practiceSessionId], references: [id], onDelete: Cascade)
+  member            Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([practiceSessionId, memberId])
+  @@unique([practiceSessionId, arrivalOrder])
+}
+
+model EquipmentItem {
+  id                  String               @id @default(cuid())
+  name                String
+  category            String
+  quantityOnHand      Int                  @default(0)
+  reorderLevel        Int                  @default(0)
+  storageLocation     String?
+  condition           EquipmentCondition   @default(GOOD)
+  preferredVendor     String?
+  notes               String?
+  lastPurchasedAt     DateTime?
+  lastPurchaseCostCents Int?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  transactions        EquipmentTransaction[]
+}
+
+model EquipmentTransaction {
+  id                String                   @id @default(cuid())
+  equipmentItemId   String
+  transactionType   EquipmentTransactionType
+  quantity          Int
+  unitCostCents     Int?
+  reference         String?
+  notes             String?
+  performedByAdminId String?
+  occurredAt        DateTime                 @default(now())
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  equipmentItem     EquipmentItem            @relation(fields: [equipmentItemId], references: [id], onDelete: Cascade)
+  performedBy       AdminUser?               @relation("EquipmentPerformedBy", fields: [performedByAdminId], references: [id], onDelete: SetNull)
+}
+
+model ClubTask {
+  id               String      @id @default(cuid())
+  title            String
+  module           String
+  description      String?
+  status           TaskStatus  @default(OPEN)
+  priority         TaskPriority @default(MEDIUM)
+  dueAt            DateTime?
+  createdByAdminId String?
+  assignedToAdminId String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  createdBy        AdminUser?  @relation("TaskCreatedBy", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+  assignedTo       AdminUser?  @relation("TaskAssignedTo", fields: [assignedToAdminId], references: [id], onDelete: SetNull)
+}
+
+model MemberMediaSubmission {
+  id                String            @id @default(cuid())
+  memberId          String
+  title             String
+  eventTitle        String?
+  mediaType         MemberMediaType
+  status            MemberMediaStatus @default(SUBMITTED)
+  filePath          String
+  fileName          String
+  mimeType          String
+  sizeBytes         Int
+  durationSeconds   Int?
+  caption           String?
+  notes             String?
+  reviewedAt        DateTime?
+  reviewedByAdminId String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  member            Member            @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  reviewedBy        AdminUser?        @relation("MemberMediaReviewedBy", fields: [reviewedByAdminId], references: [id], onDelete: SetNull)
+}
