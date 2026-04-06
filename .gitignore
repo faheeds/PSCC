@@ -6,3 +6,6 @@ coverage
 dist
 *.log
 public/uploads
+
+.vercel
+.env*.local

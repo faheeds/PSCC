@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+const inferredDeploymentUrl =
+  process.env.APP_BASE_URL ??
+  process.env.NEXTAUTH_URL ??
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
+
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
   NEXTAUTH_URL: z.string().url(),
@@ -16,9 +22,9 @@ const envSchema = z.object({
 
 export const env = envSchema.parse({
   DATABASE_URL: process.env.DATABASE_URL,
-  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  NEXTAUTH_URL: process.env.NEXTAUTH_URL ?? inferredDeploymentUrl,
   NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-  APP_BASE_URL: process.env.APP_BASE_URL ?? process.env.NEXTAUTH_URL,
+  APP_BASE_URL: process.env.APP_BASE_URL ?? inferredDeploymentUrl,
   DEFAULT_TIMEZONE: process.env.DEFAULT_TIMEZONE ?? "America/Los_Angeles",
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
