@@ -177,6 +177,39 @@ enum MemberMediaStatus {
   ARCHIVED
 }
 
+// NEW: availability for games
+enum AvailabilityStatus {
+  AVAILABLE
+  UNAVAILABLE
+  MAYBE
+}
+
+// NEW: batting style
+enum BattingStyle {
+  RIGHT_HAND
+  LEFT_HAND
+}
+
+// NEW: bowling style
+enum BowlingStyle {
+  RIGHT_ARM_FAST
+  RIGHT_ARM_MEDIUM
+  RIGHT_ARM_SPIN_OFF
+  RIGHT_ARM_SPIN_LEG
+  LEFT_ARM_FAST
+  LEFT_ARM_MEDIUM
+  LEFT_ARM_SPIN
+}
+
+// NEW: player role
+enum PlayerRole {
+  BATSMAN
+  BOWLER
+  ALL_ROUNDER
+  WICKET_KEEPER
+  WICKET_KEEPER_BATSMAN
+}
+
 model AdminUser {
   id             String             @id @default(cuid())
   email          String             @unique
@@ -210,6 +243,7 @@ model Member {
   name           String
   phone          String?
   jerseySize     String?
+  jerseyNumber   Int?
   t40Team        T40Team?
   t20Team        T20Team?
   passwordHash   String?
@@ -218,6 +252,11 @@ model Member {
   authProviderId String?            @unique
   status         MemberStatus       @default(ACTIVE)
   memberSince    DateTime           @default(now())
+  // NEW: cricket profile
+  battingStyle   BattingStyle?
+  bowlingStyle   BowlingStyle?
+  playerRole     PlayerRole?
+  bio            String?
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
   participations GameParticipation[]
@@ -225,6 +264,11 @@ model Member {
   payments       Payment[]
   mediaSubmissions MemberMediaSubmission[]
   practiceCheckIns PracticeCheckIn[]
+  // NEW relations
+  availability   GameAvailability[]
+  battingStats   BattingPerformance[]
+  bowlingStats   BowlingPerformance[]
+  notifTokens    NotificationToken[]
 }
 
 model GameType {
@@ -247,11 +291,20 @@ model Game {
   venue          String?
   gameDate       DateTime
   status         GameStatus          @default(SCHEDULED)
+  // NEW: result fields
+  psccScore      String?
+  opponentScore  String?
+  result         String?             // "Won", "Lost", "Tied", "No result"
+  manOfMatch     String?
   notes          String?
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
   gameType       GameType            @relation(fields: [gameTypeId], references: [id], onDelete: Restrict)
   participations GameParticipation[]
+  // NEW relations
+  availability   GameAvailability[]
+  battingPerfs   BattingPerformance[]
+  bowlingPerfs   BowlingPerformance[]
 }
 
 model GameParticipation {
@@ -259,6 +312,8 @@ model GameParticipation {
   memberId          String
   gameId            String
   feeCents          Int
+  // NEW: batting position
+  battingPosition   Int?
   notes             String?
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
@@ -267,6 +322,72 @@ model GameParticipation {
   ledgerEntry       LedgerEntry?
 
   @@unique([memberId, gameId])
+}
+
+// NEW: Game availability - members RSVP
+model GameAvailability {
+  id        String             @id @default(cuid())
+  gameId    String
+  memberId  String
+  status    AvailabilityStatus @default(AVAILABLE)
+  notes     String?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  game      Game               @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  member    Member             @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, memberId])
+}
+
+// NEW: Batting scorecard per game
+model BattingPerformance {
+  id          String   @id @default(cuid())
+  gameId      String
+  memberId    String
+  runs        Int      @default(0)
+  balls       Int      @default(0)
+  fours       Int      @default(0)
+  sixes       Int      @default(0)
+  isOut       Boolean  @default(false)
+  dismissal   String?  // "Bowled", "Caught", "LBW", "Run out", etc.
+  bowler      String?
+  battingOrder Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  game        Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, memberId])
+}
+
+// NEW: Bowling scorecard per game
+model BowlingPerformance {
+  id          String   @id @default(cuid())
+  gameId      String
+  memberId    String
+  overs       Float    @default(0)
+  maidens     Int      @default(0)
+  runs        Int      @default(0)
+  wickets     Int      @default(0)
+  wides       Int      @default(0)
+  noBalls     Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  game        Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, memberId])
+}
+
+// NEW: Push notification tokens
+model NotificationToken {
+  id        String   @id @default(cuid())
+  memberId  String
+  token     String   @unique
+  platform  String   // "web", "ios", "android"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
 }
 
 model LedgerEntry {
