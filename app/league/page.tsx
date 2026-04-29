@@ -9,33 +9,35 @@ const teams = [
     id: "steelheads",
     name: "Steelheads",
     division: "Division A",
-    color: "amber",
+    color: "amber" as const,
     scheduleUrl: "https://www.nwcl.org/NWCL/teamSchedule.do?teamId=1452&league=160&clubId=232",
-    resultsUrl: "https://www.nwcl.org/NWCL/teamResults.do?teamId=1452&league=160&clubId=232",
+    resultsUrl:  "https://www.nwcl.org/NWCL/teamResults.do?teamId=1452&league=160&clubId=232",
   },
   {
     id: "chinooks",
     name: "Chinooks",
     division: "Division B",
-    color: "blue",
+    color: "blue" as const,
     scheduleUrl: "https://www.nwcl.org/NWCL/teamSchedule.do?teamId=1464&league=161&clubId=232",
-    resultsUrl: "https://www.nwcl.org/NWCL/teamResults.do?teamId=1464&league=161&clubId=232",
+    resultsUrl:  "https://www.nwcl.org/NWCL/teamResults.do?teamId=1464&league=161&clubId=232",
   },
   {
     id: "sockeyes",
     name: "Sockeyes",
     division: "Division C",
-    color: "forest",
+    color: "forest" as const,
     scheduleUrl: "https://www.nwcl.org/NWCL/teamSchedule.do?teamId=1474&league=162&clubId=232",
-    resultsUrl: "https://www.nwcl.org/NWCL/teamResults.do?teamId=1474&league=162&clubId=232",
+    resultsUrl:  "https://www.nwcl.org/NWCL/teamResults.do?teamId=1474&league=162&clubId=232",
   },
 ];
 
-const colorMap: Record<string, string> = {
-  amber:  { active: "bg-amber-500/20 text-amber-300 border-amber-500/30",  dot: "bg-amber-400",  tab: "border-amber-400" },
-  blue:   { active: "bg-navy-500/30 text-navy-200 border-navy-400/30",     dot: "bg-blue-400",   tab: "border-blue-400" },
-  forest: { active: "bg-forest-700/30 text-sage border-forest-600/30",     dot: "bg-sage",       tab: "border-sage" },
-} as any;
+type TeamColor = "amber" | "blue" | "forest";
+
+const colorMap: Record<TeamColor, { active: string; dot: string }> = {
+  amber:  { active: "bg-amber-500/20 text-amber-300 border-amber-500/30",   dot: "bg-amber-400"  },
+  blue:   { active: "bg-navy-500/30 text-navy-200 border-navy-400/30",      dot: "bg-blue-400"   },
+  forest: { active: "bg-forest-700/30 text-sage border-forest-600/30",      dot: "bg-sage"       },
+};
 
 export default function LeaguePage() {
   const [activeTeam, setActiveTeam] = useState("steelheads");
@@ -66,7 +68,7 @@ export default function LeaguePage() {
 
       {/* Team selector */}
       <div className="px-4 max-w-7xl mx-auto w-full">
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {teams.map((t) => {
             const c = colorMap[t.color];
             const isActive = activeTeam === t.id;
@@ -81,10 +83,8 @@ export default function LeaguePage() {
                 }`}
               >
                 <div className={`w-2 h-2 rounded-full ${isActive ? c.dot : "bg-navy-600"}`}/>
-                <div>
-                  <span className="font-semibold">PSCC {t.name}</span>
-                  <span className={`ml-2 text-xs ${isActive ? "opacity-70" : "text-navy-500"}`}>{t.division}</span>
-                </div>
+                <span className="font-semibold">PSCC {t.name}</span>
+                <span className={`text-xs ${isActive ? "opacity-70" : "text-navy-500"}`}>{t.division}</span>
               </button>
             );
           })}
@@ -138,7 +138,7 @@ export default function LeaguePage() {
         </p>
       </div>
 
-      <BottomNav active="home" />
+      <BottomNav active="league" />
     </main>
   );
 }
