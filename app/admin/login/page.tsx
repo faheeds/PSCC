@@ -18,31 +18,24 @@ export default async function AdminSignInPage(props: {
 
   return (
     <main className="min-h-screen bg-navy-900 flex items-center justify-center px-4">
-      {/* Background rings */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full border border-white/5"/>
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full border border-forest-600/10"/>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/3"/>
-      </div>
 
-      <div className="relative w-full max-w-md space-y-6">
+      <div className="w-full max-w-sm space-y-6">
 
-        {/* Logo + branding */}
+        {/* Logo + title */}
         <div className="text-center space-y-3">
           <div className="flex justify-center">
-            <div className="relative w-16 h-16">
-              <ClubLogo className="w-16 h-16" priority />
+            <div className="relative w-14 h-14">
+              <ClubLogo className="w-14 h-14" priority />
             </div>
           </div>
           <div>
             <p className="text-forest-400 text-xs font-semibold uppercase tracking-widest mb-1">Admin Portal</p>
             <h1 className="text-navy-100 text-2xl font-display font-semibold">Club Operations</h1>
-            <p className="text-navy-400 text-sm mt-1">Sign in to manage PSCC</p>
           </div>
         </div>
 
         {/* Card */}
-        <div className="bg-navy-800 border border-white/5 rounded-2xl p-6 space-y-5 shadow-soft">
+        <div className="bg-navy-800 border border-white/5 rounded-2xl p-6 space-y-4 shadow-soft">
 
           {errorMessage && (
             <div className="bg-red-900/20 border border-red-500/30 text-red-300 px-4 py-3 rounded-xl text-sm">
