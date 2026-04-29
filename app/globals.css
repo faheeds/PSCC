@@ -2,29 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
+@layer base {
+  :root {
+    --font-body: "Inter", ui-sans-serif, system-ui;
+    --font-display: "Georgia", serif;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-navy-900 text-navy-100 font-body antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-navy-600 rounded-full; }
+
+  /* Selection */
+  ::selection { @apply bg-forest-600/40 text-navy-100; }
+
+  /* Focus rings */
+  :focus-visible {
+    @apply outline-none ring-2 ring-sage ring-offset-2 ring-offset-navy-900;
+  }
+
+  /* Links */
+  a { @apply text-mint; }
+
+  /* Headings */
+  h1, h2, h3, h4, h5 {
+    @apply text-navy-100 tracking-tight;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
-}
+@layer components {
+  /* Cards */
+  .card-dark {
+    @apply bg-navy-800 border border-white/5 rounded-2xl;
+  }
+  .card-light {
+    @apply bg-surface-50 border border-surface-100 rounded-2xl;
+  }
 
-body {
-  @apply min-h-screen bg-paper text-ink antialiased;
-  background-image:
-    radial-gradient(circle at top left, rgba(69, 148, 97, 0.16), transparent 25%),
-    radial-gradient(circle at top right, rgba(182, 129, 59, 0.16), transparent 22%),
-    linear-gradient(180deg, rgba(251, 248, 242, 0.98) 0%, rgba(240, 247, 242, 0.96) 100%);
-}
+  /* Mobile safe area for bottom nav */
+  .pb-safe {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
 
-a {
-  @apply text-brand-700 hover:text-brand-600;
-}
+  /* Pill badge */
+  .badge-green {
+    @apply bg-forest-700/40 text-sage border border-forest-600/40 rounded-full px-2.5 py-0.5 text-[10px] font-medium;
+  }
+  .badge-blue {
+    @apply bg-navy-600/40 text-navy-300 border border-navy-600/40 rounded-full px-2.5 py-0.5 text-[10px] font-medium;
+  }
+  .badge-amber {
+    @apply bg-amber-900/30 text-amber-400 border border-amber-700/40 rounded-full px-2.5 py-0.5 text-[10px] font-medium;
+  }
 
-button,
-input,
-select,
-textarea {
-  @apply transition;
+  /* Buttons */
+  .btn-primary {
+    @apply bg-forest-700 text-mint border border-forest-600 rounded-xl px-4 py-2.5 text-sm font-medium transition hover:bg-forest-600 active:scale-95;
+  }
+  .btn-secondary {
+    @apply bg-navy-700 text-navy-200 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium transition hover:bg-navy-600 active:scale-95;
+  }
+  .btn-ghost {
+    @apply text-sage text-sm font-medium transition hover:text-mint active:scale-95;
+  }
+
+  /* Section label */
+  .section-label {
+    @apply text-[10px] text-navy-400 uppercase tracking-widest font-medium mb-2;
+  }
+
+  /* Admin overrides - keep admin pages light */
+  .admin-page {
+    @apply bg-surface-50 text-ink min-h-screen;
+  }
 }
