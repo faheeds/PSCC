@@ -1,46 +1,39 @@
 import Link from "next/link";
 
-// Site header is now minimal - main nav is the bottom nav on mobile
-// This header only shows on non-home pages
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between bg-navy-800 px-4 py-3 border-b border-white/5">
       <Link href="/" className="flex items-center gap-2 no-underline">
-        <div className="w-7 h-7 rounded-full bg-forest-700 border border-forest-600 flex items-center justify-center">
-          <span className="text-mint text-[9px] font-semibold">PSCC</span>
-        </div>
         <span className="text-navy-100 text-sm font-medium">Puget Sound CC</span>
       </Link>
-      <Link
-        href="/account/sign-in"
-        className="bg-forest-700 text-mint text-xs px-3 py-1.5 rounded-lg border border-forest-600 no-underline font-medium"
-      >
+      <Link href="/account/sign-in" className="bg-forest-700 text-mint text-xs px-3 py-1.5 rounded-lg border border-forest-600 no-underline font-medium">
         Sign In
       </Link>
     </header>
   );
 }
 
-export function BottomNav({ active }: { active?: "home" | "games" | "podcast" | "account" }) {
+export function BottomNav({ active }: { active?: "home" | "leaderboard" | "podcast" | "account" }) {
   const items = [
     {
       key: "home",
       href: "/",
       label: "Home",
-      icon: (active: boolean) => (
+      icon: (on: boolean) => (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path d="M3 9l7-6 7 6v8a1 1 0 01-1 1H4a1 1 0 01-1-1V9z" stroke={active ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
+          <path d="M3 9l7-6 7 6v8a1 1 0 01-1 1H4a1 1 0 01-1-1V9z" stroke={on ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
         </svg>
       ),
     },
     {
-      key: "games",
-      href: "/account",
-      label: "Portal",
-      icon: (active: boolean) => (
+      key: "leaderboard",
+      href: "/leaderboard",
+      label: "Rankings",
+      icon: (on: boolean) => (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="8" r="3" stroke={active ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
-          <path d="M4 17c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke={active ? "#52b788" : "#8892b0"} strokeWidth="1.5" strokeLinecap="round"/>
+          <rect x="3" y="10" width="3" height="7" rx="1" stroke={on ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
+          <rect x="8.5" y="6" width="3" height="11" rx="1" stroke={on ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
+          <rect x="14" y="3" width="3" height="14" rx="1" stroke={on ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
         </svg>
       ),
     },
@@ -48,21 +41,21 @@ export function BottomNav({ active }: { active?: "home" | "games" | "podcast" | 
       key: "podcast",
       href: "/podcast",
       label: "Podcast",
-      icon: (active: boolean) => (
+      icon: (on: boolean) => (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <circle cx="10" cy="10" r="7" stroke={active ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
-          <path d="M8 7.5l5 2.5-5 2.5V7.5z" stroke={active ? "#52b788" : "#8892b0"} strokeWidth="1.5" strokeLinejoin="round"/>
+          <circle cx="10" cy="10" r="7" stroke={on ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
+          <path d="M8 7.5l5 2.5-5 2.5V7.5z" stroke={on ? "#52b788" : "#8892b0"} strokeWidth="1.5" strokeLinejoin="round"/>
         </svg>
       ),
     },
     {
       key: "account",
-      href: "/account/sign-in",
-      label: "Sign In",
-      icon: (active: boolean) => (
+      href: "/account",
+      label: "Portal",
+      icon: (on: boolean) => (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <rect x="3" y="4" width="14" height="13" rx="2" stroke={active ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
-          <path d="M7 2v4M13 2v4M3 9h14" stroke={active ? "#52b788" : "#8892b0"} strokeWidth="1.5" strokeLinecap="round"/>
+          <circle cx="10" cy="8" r="3" stroke={on ? "#52b788" : "#8892b0"} strokeWidth="1.5"/>
+          <path d="M4 17c0-3.314 2.686-5 6-5s6 1.686 6 5" stroke={on ? "#52b788" : "#8892b0"} strokeWidth="1.5" strokeLinecap="round"/>
         </svg>
       ),
     },
