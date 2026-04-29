@@ -3,17 +3,18 @@ import { ClubLogo } from "@/components/club-logo";
 import { requireAdmin } from "@/lib/admin-auth";
 
 const navItems = [
-  { href: "/admin/dashboard",      label: "Dashboard",      icon: "◈" },
-  { href: "/admin/members",        label: "Members",        icon: "◉" },
-  { href: "/admin/practices",      label: "Practices",      icon: "◎" },
-  { href: "/admin/games",          label: "Games",          icon: "⬡" },
-  { href: "/admin/grounds",        label: "Grounds",        icon: "◻" },
-  { href: "/admin/ledger",         label: "Ledger",         icon: "◆" },
-  { href: "/admin/equipment",      label: "Equipment",      icon: "◧" },
-  { href: "/admin/social",         label: "Social Media",   icon: "◌" },
-  { href: "/admin/communications", label: "Comms",          icon: "◈" },
-  { href: "/admin/tasks",          label: "Tasks",          icon: "◩" },
-  { href: "/admin/reimbursements", label: "Reimbursements", icon: "◈" },
+  { href: "/admin/dashboard",      label: "Dashboard" },
+  { href: "/admin/members",        label: "Members" },
+  { href: "/admin/practices",      label: "Practices" },
+  { href: "/admin/games",          label: "Games" },
+  { href: "/admin/scorecards",     label: "Scorecards" },
+  { href: "/admin/grounds",        label: "Grounds" },
+  { href: "/admin/ledger",         label: "Ledger" },
+  { href: "/admin/equipment",      label: "Equipment" },
+  { href: "/admin/social",         label: "Social Media" },
+  { href: "/admin/communications", label: "Comms" },
+  { href: "/admin/tasks",          label: "Tasks" },
+  { href: "/admin/reimbursements", label: "Reimbursements" },
 ];
 
 export default async function AdminProtectedLayout({ children }: { children: React.ReactNode }) {
@@ -24,7 +25,6 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
 
       {/* ── Sidebar (desktop) ── */}
       <aside className="hidden lg:flex flex-col w-56 flex-shrink-0 bg-navy-800 border-r border-white/5 sticky top-0 h-screen overflow-y-auto">
-        {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
           <div className="relative w-8 h-8 flex-shrink-0">
             <ClubLogo className="w-8 h-8" priority />
@@ -35,7 +35,6 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
           </div>
         </div>
 
-        {/* Nav items */}
         <nav className="flex-1 py-4 px-3 space-y-0.5">
           {navItems.map((item) => (
             <Link
@@ -43,15 +42,16 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
               href={item.href}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-navy-300 text-sm no-underline hover:bg-white/5 hover:text-navy-100 transition"
             >
-              <span className="text-navy-500 text-base w-4">{item.icon}</span>
               {item.label}
             </Link>
           ))}
         </nav>
 
-        {/* Footer */}
-        <div className="px-5 py-4 border-t border-white/5">
-          <Link href="/" className="text-navy-500 text-xs no-underline hover:text-navy-300 transition">
+        <div className="px-5 py-4 border-t border-white/5 space-y-2">
+          <Link href="/leaderboard" className="block text-sage text-xs no-underline hover:text-mint transition">
+            🏏 Leaderboard
+          </Link>
+          <Link href="/" className="block text-navy-500 text-xs no-underline hover:text-navy-300 transition">
             ← Back to site
           </Link>
         </div>
@@ -64,7 +64,6 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
           <span className="text-navy-100 text-sm font-semibold flex-1">PSCC Admin</span>
           <Link href="/" className="text-navy-400 text-xs no-underline">← Site</Link>
         </div>
-        {/* Horizontal scroll nav for mobile */}
         <div className="flex gap-1 overflow-x-auto px-4 pb-3 scrollbar-hide">
           {navItems.map((item) => (
             <Link
@@ -79,8 +78,8 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
       </div>
 
       {/* ── Main content ── */}
-      <main className="flex-1 min-w-0 pt-0 lg:pt-0">
-        <div className="mt-0 lg:mt-0 pt-24 lg:pt-0">
+      <main className="flex-1 min-w-0">
+        <div className="pt-24 lg:pt-0">
           <div className="p-6 lg:p-8">
             {children}
           </div>
