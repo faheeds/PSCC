@@ -1,16 +1,43 @@
 import Link from "next/link";
+import { ClubLogo } from "@/components/club-logo";
 
-export function SiteHeader() {
+// Public header for non-account pages (leaderboard, podcast, about, contact)
+export function PublicHeader() {
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between bg-navy-800 px-4 py-3 border-b border-white/5">
-      <Link href="/" className="flex items-center gap-2 no-underline">
-        <span className="text-navy-100 text-sm font-medium">Puget Sound CC</span>
-      </Link>
-      <Link href="/account/sign-in" className="bg-forest-700 text-mint text-xs px-3 py-1.5 rounded-lg border border-forest-600 no-underline font-medium">
-        Sign In
-      </Link>
+    <header className="sticky top-0 z-40 bg-navy-800/95 backdrop-blur border-b border-white/5">
+      <div className="flex items-center gap-3 px-4 py-3 max-w-7xl mx-auto">
+        <Link href="/" className="flex items-center gap-2.5 no-underline flex-shrink-0">
+          <div className="relative w-7 h-7">
+            <ClubLogo className="w-7 h-7" />
+          </div>
+          <span className="text-navy-100 text-sm font-semibold hidden sm:block">Puget Sound Cricket Club</span>
+          <span className="text-navy-100 text-sm font-semibold sm:hidden">PSCC</span>
+        </Link>
+        <nav className="hidden md:flex items-center gap-1 ml-4 flex-1">
+          {[
+            { href: "/leaderboard", label: "Leaderboard" },
+            { href: "/podcast",     label: "Podcast" },
+            { href: "/about",       label: "About" },
+            { href: "/contact",     label: "Contact" },
+          ].map((link) => (
+            <Link key={link.href} href={link.href} className="text-navy-400 hover:text-navy-100 text-xs px-3 py-1.5 rounded-lg no-underline transition hover:bg-white/5">
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="ml-auto">
+          <Link href="/account" className="bg-forest-700 text-mint text-xs px-3 py-1.5 rounded-lg border border-forest-600 no-underline font-medium hover:bg-forest-600 transition">
+            Member Portal
+          </Link>
+        </div>
+      </div>
     </header>
   );
+}
+
+// Legacy export kept for compatibility
+export function SiteHeader() {
+  return <PublicHeader />;
 }
 
 export function BottomNav({ active }: { active?: "home" | "leaderboard" | "podcast" | "account" }) {
