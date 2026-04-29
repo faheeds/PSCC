@@ -11,6 +11,8 @@ export default async function MemberStatsPage() {
   const session = await requireMember();
   const memberId = session.user?.memberId;
 
+  if (!memberId) return null;
+
   const [member, stats, recentBatting, recentBowling] = await Promise.all([
     prisma.member.findUnique({
       where: { id: memberId },
@@ -33,7 +35,7 @@ export default async function MemberStatsPage() {
 
   if (!member) return null;
 
-  const initials = member.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  const initials = member.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
 
   return (
     <main className="min-h-screen bg-navy-900 pb-24">
@@ -59,7 +61,7 @@ export default async function MemberStatsPage() {
             <div className="flex-1">
               <p className="text-navy-100 text-base font-semibold">{member.name}</p>
               <p className="text-navy-400 text-xs mt-0.5">
-                {member.playerRole?.replace("_", " ") ?? "Player"}
+                {member.playerRole?.replace(/_/g, " ") ?? "Player"}
                 {member.t20Team ? ` · ${member.t20Team}` : ""}
               </p>
             </div>
@@ -150,6 +152,26 @@ export default async function MemberStatsPage() {
                         {b.game.result}
                       </p>
                     )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {recentBowling.length > 0 && (
+          <div>
+            <p className="text-[10px] text-navy-500 uppercase tracking-widest font-medium mb-2">Recent bowling</p>
+            <div className="space-y-1.5">
+              {recentBowling.map((b) => (
+                <div key={b.id} className="bg-navy-800 border border-white/5 rounded-xl px-3.5 py-2.5 flex items-center gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-navy-200 text-xs font-medium truncate">vs {b.game.opponent ?? b.game.title}</p>
+                    <p className="text-navy-500 text-[10px]">{b.overs} overs</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-amber-400 text-sm font-bold">{b.wickets}/{b.runs}</p>
+                    <p className="text-navy-500 text-[10px]">wkts/runs</p>
                   </div>
                 </div>
               ))}
