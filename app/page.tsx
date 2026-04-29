@@ -171,64 +171,132 @@ export default function HomePage() {
       </section>
 
       {/* ─── MOBILE QUICK ACTIONS ─── */}
-      <div className="md:hidden px-4 pt-4 space-y-4 pb-24">
-        {/* Next Practice */}
-        <div>
-          <p className="section-label">Next Practice</p>
-          <div className="bg-navy-800 border border-forest-600/30 rounded-2xl p-3.5 flex items-center gap-3">
-            <div className="bg-forest-700 rounded-xl px-3 py-2.5 text-center flex-shrink-0">
-              <p className="text-mint text-xl font-semibold leading-none">7</p>
-              <p className="text-forest-300 text-[9px] uppercase tracking-wider mt-1">May</p>
+      <div className="md:hidden pb-24">
+
+        {/* Stats strip */}
+        <div className="flex border-b border-white/5">
+          <div className="flex-1 py-3 text-center border-r border-white/5">
+            <p className="text-sage text-base font-bold leading-none">T20/T40</p>
+            <p className="text-navy-500 text-[10px] mt-1">Formats</p>
+          </div>
+          <div className="flex-1 py-3 text-center border-r border-white/5">
+            <p className="text-sage text-base font-bold leading-none">Wed</p>
+            <p className="text-navy-500 text-[10px] mt-1">Practice</p>
+          </div>
+          <div className="flex-1 py-3 text-center">
+            <p className="text-sage text-base font-bold leading-none">2014</p>
+            <p className="text-navy-500 text-[10px] mt-1">Est.</p>
+          </div>
+        </div>
+
+        <div className="px-4 pt-4 space-y-4">
+
+          {/* Next Practice - sporty card */}
+          <div className="bg-gradient-to-br from-forest-800 to-navy-800 border border-forest-600/30 rounded-2xl p-4 relative overflow-hidden">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-8">
+              <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+                <rect x="8" y="4" width="6" height="44" rx="3" fill="#ccd6f6"/>
+                <rect x="23" y="4" width="6" height="44" rx="3" fill="#ccd6f6"/>
+                <rect x="38" y="4" width="6" height="44" rx="3" fill="#ccd6f6"/>
+                <rect x="5" y="2" width="16" height="6" rx="3" fill="#ccd6f6"/>
+                <rect x="20" y="2" width="16" height="6" rx="3" fill="#ccd6f6"/>
+              </svg>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-navy-100 text-sm font-medium">Wednesday Session</p>
-              <p className="text-navy-400 text-xs mt-0.5">6:00 PM · North Robinswood Cricket Field, Bellevue</p>
+            <p className="text-forest-300 text-[10px] font-semibold uppercase tracking-widest mb-2">Next Practice</p>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="bg-forest-700/60 border border-forest-500/40 rounded-xl px-3 py-2 text-center flex-shrink-0">
+                <p className="text-mint text-2xl font-bold leading-none">7</p>
+                <p className="text-forest-400 text-[9px] uppercase tracking-wide">MAY</p>
+              </div>
+              <div>
+                <p className="text-navy-100 text-sm font-semibold">Wednesday Session</p>
+                <p className="text-navy-400 text-xs mt-0.5">6:00 PM · North Robinswood</p>
+              </div>
             </div>
-            <Link href="/account" className="bg-forest-700 border border-forest-600 rounded-full px-3 py-1.5 text-mint text-xs font-medium no-underline flex-shrink-0">
-              Check In
+            <Link href="/account" className="flex items-center justify-center w-full bg-forest-700 border border-forest-500/50 rounded-xl py-2.5 text-mint text-sm font-semibold no-underline">
+              Check In Now →
             </Link>
           </div>
-        </div>
 
-        {/* Upcoming Games */}
-        <div>
-          <p className="section-label">Upcoming Games</p>
-          <div className="space-y-2">
-            {upcomingGames.map((game) => (
-              <div key={game.opponent} className="bg-navy-800 border border-white/5 rounded-2xl p-3 flex items-center gap-3">
-                <div className="bg-navy-700/60 rounded-xl px-2.5 py-2 text-center flex-shrink-0 min-w-[44px]">
-                  <p className="text-navy-100 text-base font-semibold leading-none">{game.day}</p>
-                  <p className="text-navy-400 text-[9px] mt-0.5">{game.month}</p>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-navy-100 text-sm font-medium">PSCC vs {game.opponent}</p>
-                  <p className="text-navy-400 text-xs mt-0.5">{game.time} · {game.venue}</p>
-                </div>
-                <span className={`text-[9px] px-2 py-1 rounded-full font-medium border flex-shrink-0 ${
-                  game.format === "T20"
-                    ? "bg-forest-700/30 text-sage border-forest-600/40"
-                    : "bg-navy-600/30 text-navy-300 border-navy-600/40"
-                }`}>
-                  {game.format}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Join Banner */}
-        <div className="bg-gradient-to-r from-forest-700 to-navy-700 border border-forest-600/30 rounded-2xl p-4 flex items-center justify-between">
+          {/* 2x2 Quick action grid */}
           <div>
-            <p className="text-navy-100 text-sm font-medium">Want to play?</p>
-            <p className="text-navy-300 text-xs mt-0.5">Join Puget Sound Cricket Club</p>
+            <p className="section-label">Quick actions</p>
+            <div className="grid grid-cols-2 gap-2">
+              <Link href="/account" className="bg-navy-800 border border-white/5 rounded-2xl p-3.5 no-underline hover:border-forest-600/30 transition">
+                <div className="w-8 h-8 bg-forest-700/40 rounded-xl flex items-center justify-center mb-2.5">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#52b788" strokeWidth="1.3"/><path d="M5 8l2 2 4-4" stroke="#52b788" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </div>
+                <p className="text-navy-100 text-sm font-semibold">Check In</p>
+                <p className="text-navy-500 text-[10px] mt-0.5">Lock your batting spot</p>
+              </Link>
+              <Link href="/account" className="bg-navy-800 border border-white/5 rounded-2xl p-3.5 no-underline hover:border-amber-600/30 transition">
+                <div className="w-8 h-8 bg-amber-900/30 rounded-xl flex items-center justify-center mb-2.5">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#f59e0b" strokeWidth="1.3"/><path d="M5 7.5h6M5 10h4" stroke="#f59e0b" strokeWidth="1.3" strokeLinecap="round"/></svg>
+                </div>
+                <p className="text-navy-100 text-sm font-semibold">Dues</p>
+                <p className="text-navy-500 text-[10px] mt-0.5">View & pay balance</p>
+              </Link>
+              <Link href="/account/stats" className="bg-navy-800 border border-white/5 rounded-2xl p-3.5 no-underline hover:border-blue-600/30 transition">
+                <div className="w-8 h-8 bg-blue-900/30 rounded-xl flex items-center justify-center mb-2.5">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="8" width="3" height="6" rx="1" stroke="#60a5fa" strokeWidth="1.3"/><rect x="6.5" y="5" width="3" height="9" rx="1" stroke="#60a5fa" strokeWidth="1.3"/><rect x="11" y="2" width="3" height="12" rx="1" stroke="#60a5fa" strokeWidth="1.3"/></svg>
+                </div>
+                <p className="text-navy-100 text-sm font-semibold">My Stats</p>
+                <p className="text-navy-500 text-[10px] mt-0.5">Batting & bowling</p>
+              </Link>
+              <Link href="/league" className="bg-navy-800 border border-white/5 rounded-2xl p-3.5 no-underline hover:border-sage/30 transition">
+                <div className="w-8 h-8 bg-forest-700/20 rounded-xl flex items-center justify-center mb-2.5">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#52b788" strokeWidth="1.3"/><path d="M5.5 8c0-1.38 1.12-2.5 2.5-2.5S10.5 6.62 10.5 8" stroke="#52b788" strokeWidth="1.3" strokeLinecap="round"/><circle cx="8" cy="8" r="1" fill="#52b788"/></svg>
+                </div>
+                <p className="text-navy-100 text-sm font-semibold">League</p>
+                <p className="text-navy-500 text-[10px] mt-0.5">NWCL schedule</p>
+              </Link>
+            </div>
           </div>
-          <Link href="/contact" className="bg-sage text-navy-900 text-xs font-semibold px-3 py-2 rounded-xl no-underline flex-shrink-0">
-            Contact Us
-          </Link>
+
+          {/* Upcoming Games */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <p className="section-label mb-0">Upcoming Games</p>
+              <Link href="/league" className="text-sage text-[10px] no-underline">View all →</Link>
+            </div>
+            <div className="space-y-2">
+              {upcomingGames.map((game) => (
+                <div key={game.opponent} className="bg-navy-800 border border-white/5 rounded-xl p-3 flex items-center gap-3">
+                  <div className="bg-navy-700/60 rounded-lg w-10 py-1.5 text-center flex-shrink-0">
+                    <p className="text-navy-100 text-sm font-bold leading-none">{game.day}</p>
+                    <p className="text-navy-500 text-[9px] mt-0.5">{game.month}</p>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-navy-100 text-xs font-semibold">PSCC vs {game.opponent}</p>
+                    <p className="text-navy-500 text-[10px] mt-0.5">{game.time} · {game.venue.split(",")[0]}</p>
+                  </div>
+                  <span className={`text-[9px] px-2 py-1 rounded-full font-semibold border flex-shrink-0 ${
+                    game.format === "T20"
+                      ? "bg-forest-700/30 text-sage border-forest-600/40"
+                      : "bg-navy-600/30 text-navy-300 border-navy-600/40"
+                  }`}>
+                    {game.format}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Join Banner */}
+          <div className="bg-gradient-to-r from-forest-800 via-forest-700 to-navy-800 border border-forest-600/30 rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <p className="text-navy-100 text-sm font-semibold">Want to play?</p>
+              <p className="text-navy-400 text-xs mt-0.5">Join Puget Sound Cricket Club</p>
+            </div>
+            <Link href="/contact" className="bg-sage text-navy-900 text-xs font-bold px-4 py-2 rounded-xl no-underline flex-shrink-0">
+              Join Us
+            </Link>
+          </div>
+
         </div>
       </div>
 
-      {/* ─── DESKTOP MEMBER ACTIONS ─── */}
+            {/* ─── DESKTOP MEMBER ACTIONS ─── */}
       <section className="hidden md:block bg-surface-50 py-20">
         <div className="max-w-7xl mx-auto px-8">
           <div className="text-center mb-12">
