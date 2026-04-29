@@ -103,8 +103,8 @@ export default function HomePage() {
               <Link href="/account" className="bg-forest-700 text-mint px-6 py-3 rounded-xl border border-forest-600 no-underline font-semibold hover:bg-forest-600 transition text-base">
                 Member Portal
               </Link>
-              <Link href="/about" className="bg-white/5 text-navy-200 px-6 py-3 rounded-xl border border-white/10 no-underline font-semibold hover:bg-white/10 transition text-base">
-                About the Club
+              <Link href="/admin/login" className="bg-white/5 text-navy-200 px-6 py-3 rounded-xl border border-white/10 no-underline font-semibold hover:bg-white/10 transition text-base">
+                Admin Portal
               </Link>
             </div>
             {/* Next practice pill */}
@@ -136,7 +136,7 @@ export default function HomePage() {
               {[
                 { val: "T20/T40", label: "Formats" },
                 { val: "Wed", label: "Practice day" },
-                { val: "2015", label: "Est." },
+                { val: "2014", label: "Est." },
               ].map((s) => (
                 <div key={s.label} className="bg-navy-800 border border-white/5 rounded-xl px-3 py-4 text-center">
                   <p className="text-sage text-lg font-semibold">{s.val}</p>
@@ -233,8 +233,8 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-8">
           <div className="text-center mb-12">
             <p className="text-forest-600 text-sm font-semibold uppercase tracking-widest mb-3">Member Portal</p>
-            <h2 className="text-4xl font-display text-navy-900">Three things. Done fast.</h2>
-            <p className="text-navy-500 mt-3 text-lg max-w-xl mx-auto">Everything a PSCC member needs — check in for practice, manage dues, and share media.</p>
+            <h2 className="text-4xl font-display text-navy-900">Your club. Your game. Your stats.</h2>
+            <p className="text-navy-500 mt-3 text-lg max-w-xl mx-auto">Everything a PSCC cricketer needs — from checking in at the crease to tracking your batting average.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {memberActions.map((action) => (
