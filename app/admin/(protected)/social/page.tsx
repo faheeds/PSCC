@@ -284,9 +284,10 @@ function memberMediaBadgeClassName(status: MemberMediaStatus): "success" | "defa
     case MemberMediaStatus.REVIEWED:
       return "default";
     case MemberMediaStatus.ARCHIVED:
-      return "bg-slate-100 text-navy-300";
+      return "default";
     default:
-      return "bg-amber-50 text-amber-700";
+      return "warning";
   }
 }
+
 
