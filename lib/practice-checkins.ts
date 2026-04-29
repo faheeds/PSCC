@@ -2,8 +2,15 @@ const EARTH_RADIUS_METERS = 6_371_000;
 
 export const DEFAULT_PRACTICE_CHECK_IN_RADIUS_METERS = 200;
 
-export function getPracticeCheckInOpenTime(startsAt: Date | string) {
-  return new Date(startsAt);
+// Check-in opens at 4:00 PM on practice day
+const CHECK_IN_OPEN_HOUR_LOCAL = 16; // 4 PM
+
+export function getPracticeCheckInOpenTime(startsAt: Date | string): Date {
+  // Set check-in open time to 4:00 PM on the same calendar day as the practice
+  const d = new Date(startsAt);
+  const openTime = new Date(d);
+  openTime.setHours(CHECK_IN_OPEN_HOUR_LOCAL, 0, 0, 0);
+  return openTime;
 }
 
 export function isPracticeCheckInOpen(
@@ -14,6 +21,7 @@ export function isPracticeCheckInOpen(
     return false;
   }
 
+  // Opens at 4:00 PM on practice day, closes when practice ends
   const opensAt = getPracticeCheckInOpenTime(practice.startsAt);
   const closesAt = new Date(practice.endsAt);
 
