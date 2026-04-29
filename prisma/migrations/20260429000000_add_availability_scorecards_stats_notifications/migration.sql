@@ -1,33 +1,38 @@
--- CreateEnum
-CREATE TYPE "AvailabilityStatus" AS ENUM ('AVAILABLE', 'UNAVAILABLE', 'MAYBE');
+-- Safe enum creation using DO blocks (handles already-existing types)
+DO $$ BEGIN
+  CREATE TYPE "AvailabilityStatus" AS ENUM ('AVAILABLE', 'UNAVAILABLE', 'MAYBE');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- CreateEnum
-CREATE TYPE "BattingStyle" AS ENUM ('RIGHT_HAND', 'LEFT_HAND');
+DO $$ BEGIN
+  CREATE TYPE "BattingStyle" AS ENUM ('RIGHT_HAND', 'LEFT_HAND');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- CreateEnum
-CREATE TYPE "BowlingStyle" AS ENUM ('RIGHT_ARM_FAST', 'RIGHT_ARM_MEDIUM', 'RIGHT_ARM_SPIN_OFF', 'RIGHT_ARM_SPIN_LEG', 'LEFT_ARM_FAST', 'LEFT_ARM_MEDIUM', 'LEFT_ARM_SPIN');
+DO $$ BEGIN
+  CREATE TYPE "BowlingStyle" AS ENUM ('RIGHT_ARM_FAST', 'RIGHT_ARM_MEDIUM', 'RIGHT_ARM_SPIN_OFF', 'RIGHT_ARM_SPIN_LEG', 'LEFT_ARM_FAST', 'LEFT_ARM_MEDIUM', 'LEFT_ARM_SPIN');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- CreateEnum
-CREATE TYPE "PlayerRole" AS ENUM ('BATSMAN', 'BOWLER', 'ALL_ROUNDER', 'WICKET_KEEPER', 'WICKET_KEEPER_BATSMAN');
+DO $$ BEGIN
+  CREATE TYPE "PlayerRole" AS ENUM ('BATSMAN', 'BOWLER', 'ALL_ROUNDER', 'WICKET_KEEPER', 'WICKET_KEEPER_BATSMAN');
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- AlterTable Member - add cricket profile fields
-ALTER TABLE "Member" ADD COLUMN "battingStyle" "BattingStyle";
-ALTER TABLE "Member" ADD COLUMN "bowlingStyle" "BowlingStyle";
-ALTER TABLE "Member" ADD COLUMN "playerRole" "PlayerRole";
-ALTER TABLE "Member" ADD COLUMN "bio" TEXT;
-ALTER TABLE "Member" ADD COLUMN "jerseyNumber" INTEGER;
+-- AlterTable Member - add cricket profile fields (safe)
+ALTER TABLE "Member" ADD COLUMN IF NOT EXISTS "battingStyle" "BattingStyle";
+ALTER TABLE "Member" ADD COLUMN IF NOT EXISTS "bowlingStyle" "BowlingStyle";
+ALTER TABLE "Member" ADD COLUMN IF NOT EXISTS "playerRole" "PlayerRole";
+ALTER TABLE "Member" ADD COLUMN IF NOT EXISTS "bio" TEXT;
+ALTER TABLE "Member" ADD COLUMN IF NOT EXISTS "jerseyNumber" INTEGER;
 
--- AlterTable Game - add result fields
-ALTER TABLE "Game" ADD COLUMN "psccScore" TEXT;
-ALTER TABLE "Game" ADD COLUMN "opponentScore" TEXT;
-ALTER TABLE "Game" ADD COLUMN "result" TEXT;
-ALTER TABLE "Game" ADD COLUMN "manOfMatch" TEXT;
+-- AlterTable Game - add result fields (safe)
+ALTER TABLE "Game" ADD COLUMN IF NOT EXISTS "psccScore" TEXT;
+ALTER TABLE "Game" ADD COLUMN IF NOT EXISTS "opponentScore" TEXT;
+ALTER TABLE "Game" ADD COLUMN IF NOT EXISTS "result" TEXT;
+ALTER TABLE "Game" ADD COLUMN IF NOT EXISTS "manOfMatch" TEXT;
 
--- AlterTable GameParticipation - add batting position
-ALTER TABLE "GameParticipation" ADD COLUMN "battingPosition" INTEGER;
+-- AlterTable GameParticipation - add batting position (safe)
+ALTER TABLE "GameParticipation" ADD COLUMN IF NOT EXISTS "battingPosition" INTEGER;
 
--- CreateTable GameAvailability
-CREATE TABLE "GameAvailability" (
+-- CreateTable GameAvailability (safe)
+CREATE TABLE IF NOT EXISTS "GameAvailability" (
     "id" TEXT NOT NULL,
     "gameId" TEXT NOT NULL,
     "memberId" TEXT NOT NULL,
@@ -35,12 +40,11 @@ CREATE TABLE "GameAvailability" (
     "notes" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-
     CONSTRAINT "GameAvailability_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable BattingPerformance
-CREATE TABLE "BattingPerformance" (
+-- CreateTable BattingPerformance (safe)
+CREATE TABLE IF NOT EXISTS "BattingPerformance" (
     "id" TEXT NOT NULL,
     "gameId" TEXT NOT NULL,
     "memberId" TEXT NOT NULL,
@@ -54,12 +58,11 @@ CREATE TABLE "BattingPerformance" (
     "battingOrder" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-
     CONSTRAINT "BattingPerformance_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable BowlingPerformance
-CREATE TABLE "BowlingPerformance" (
+-- CreateTable BowlingPerformance (safe)
+CREATE TABLE IF NOT EXISTS "BowlingPerformance" (
     "id" TEXT NOT NULL,
     "gameId" TEXT NOT NULL,
     "memberId" TEXT NOT NULL,
@@ -71,45 +74,51 @@ CREATE TABLE "BowlingPerformance" (
     "noBalls" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-
     CONSTRAINT "BowlingPerformance_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable NotificationToken
-CREATE TABLE "NotificationToken" (
+-- CreateTable NotificationToken (safe)
+CREATE TABLE IF NOT EXISTS "NotificationToken" (
     "id" TEXT NOT NULL,
     "memberId" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "platform" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-
     CONSTRAINT "NotificationToken_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "GameAvailability_gameId_memberId_key" ON "GameAvailability"("gameId", "memberId");
+-- CreateIndex (safe)
+CREATE UNIQUE INDEX IF NOT EXISTS "GameAvailability_gameId_memberId_key" ON "GameAvailability"("gameId", "memberId");
+CREATE UNIQUE INDEX IF NOT EXISTS "BattingPerformance_gameId_memberId_key" ON "BattingPerformance"("gameId", "memberId");
+CREATE UNIQUE INDEX IF NOT EXISTS "BowlingPerformance_gameId_memberId_key" ON "BowlingPerformance"("gameId", "memberId");
+CREATE UNIQUE INDEX IF NOT EXISTS "NotificationToken_token_key" ON "NotificationToken"("token");
 
--- CreateIndex
-CREATE UNIQUE INDEX "BattingPerformance_gameId_memberId_key" ON "BattingPerformance"("gameId", "memberId");
+-- AddForeignKey (safe)
+DO $$ BEGIN
+  ALTER TABLE "GameAvailability" ADD CONSTRAINT "GameAvailability_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- CreateIndex
-CREATE UNIQUE INDEX "BowlingPerformance_gameId_memberId_key" ON "BowlingPerformance"("gameId", "memberId");
+DO $$ BEGIN
+  ALTER TABLE "GameAvailability" ADD CONSTRAINT "GameAvailability_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- CreateIndex
-CREATE UNIQUE INDEX "NotificationToken_token_key" ON "NotificationToken"("token");
+DO $$ BEGIN
+  ALTER TABLE "BattingPerformance" ADD CONSTRAINT "BattingPerformance_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- AddForeignKey
-ALTER TABLE "GameAvailability" ADD CONSTRAINT "GameAvailability_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "GameAvailability" ADD CONSTRAINT "GameAvailability_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$ BEGIN
+  ALTER TABLE "BattingPerformance" ADD CONSTRAINT "BattingPerformance_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- AddForeignKey
-ALTER TABLE "BattingPerformance" ADD CONSTRAINT "BattingPerformance_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "BattingPerformance" ADD CONSTRAINT "BattingPerformance_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$ BEGIN
+  ALTER TABLE "BowlingPerformance" ADD CONSTRAINT "BowlingPerformance_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- AddForeignKey
-ALTER TABLE "BowlingPerformance" ADD CONSTRAINT "BowlingPerformance_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "BowlingPerformance" ADD CONSTRAINT "BowlingPerformance_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$ BEGIN
+  ALTER TABLE "BowlingPerformance" ADD CONSTRAINT "BowlingPerformance_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
--- AddForeignKey
-ALTER TABLE "NotificationToken" ADD CONSTRAINT "NotificationToken_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+DO $$ BEGIN
+  ALTER TABLE "NotificationToken" ADD CONSTRAINT "NotificationToken_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;
