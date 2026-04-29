@@ -148,8 +148,8 @@ export default async function MemberAccountPage() {
   }));
 
   return (
-    <main className="min-h-screen">
-      <PageShell className="space-y-8">
+    <main className="min-h-screen bg-navy-900">
+      <PageShell className="space-y-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <SectionTitle
             eyebrow="Member Portal"
@@ -174,8 +174,8 @@ export default async function MemberAccountPage() {
 
         <Card className="space-y-4">
           <div className="space-y-1">
-            <h2 className="font-display text-2xl text-ink">Practice check-in</h2>
-            <p className="text-sm text-slate-600">
+            <h2 className="font-display text-xl font-semibold text-navy-100">Practice check-in</h2>
+            <p className="text-sm text-navy-400">
               When you arrive at the ground, tap check in to claim your spot in the batting order list. The app will only allow it when you are within the
               saved practice radius.
             </p>
@@ -186,74 +186,74 @@ export default async function MemberAccountPage() {
         <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
           <Card id="balance-breakdown" className="scroll-mt-28 space-y-4">
             <div className="space-y-1">
-              <h2 className="font-display text-2xl text-ink">Balance breakdown</h2>
-              <p className="text-sm text-slate-600">This is the simple summary of what makes up your current balance.</p>
+              <h2 className="font-display text-xl font-semibold text-navy-100">Balance breakdown</h2>
+              <p className="text-sm text-navy-400">This is the simple summary of what makes up your current balance.</p>
             </div>
             <div className="space-y-3">
               {balanceBreakdown.length ? (
                 balanceBreakdown.map((item) => (
-                  <div key={item.label} className="flex items-center justify-between rounded-2xl border border-slate-100 px-4 py-3">
-                    <p className="text-sm font-medium text-slate-700">{item.label}</p>
-                    <p className={`text-sm font-semibold ${item.amountCents > 0 ? "text-amber-700" : "text-brand-700"}`}>
+                  <div key={item.label} className="flex items-center justify-between rounded-2xl border border-white/5 px-4 py-3">
+                    <p className="text-sm font-medium text-navy-300">{item.label}</p>
+                    <p className={`text-sm font-semibold ${item.amountCents > 0 ? "text-amber-400" : "text-sage"}`}>
                       {item.amountCents > 0 ? "+" : "-"}
                       {formatCurrency(Math.abs(item.amountCents))}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-500">No charges or payments have been posted yet.</p>
+                <p className="text-sm text-navy-500">No charges or payments have been posted yet.</p>
               )}
             </div>
-            <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-4">
-              <p className="font-semibold text-ink">Current balance</p>
-              <p className={`text-lg font-semibold ${balanceCents > 0 ? "text-amber-700" : "text-brand-700"}`}>{formatCurrency(balanceCents)}</p>
+            <div className="flex items-center justify-between rounded-2xl bg-navy-700/30 px-4 py-4">
+              <p className="font-semibold text-navy-100">Current balance</p>
+              <p className={`text-lg font-semibold ${balanceCents > 0 ? "text-amber-400" : "text-sage"}`}>{formatCurrency(balanceCents)}</p>
             </div>
           </Card>
 
           <Card id="payment-history" className="scroll-mt-28 space-y-4">
             <div className="space-y-1">
-              <h2 className="font-display text-2xl text-ink">Payment history</h2>
-              <p className="text-sm text-slate-600">Every confirmed payment appears here with its amount and date.</p>
+              <h2 className="font-display text-xl font-semibold text-navy-100">Payment history</h2>
+              <p className="text-sm text-navy-400">Every confirmed payment appears here with its amount and date.</p>
             </div>
             <div className="space-y-3">
               {paymentEntries.length ? (
                 paymentEntries.map((entry) => (
-                  <div key={entry.id} className="flex flex-col gap-2 rounded-2xl border border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div key={entry.id} className="flex flex-col gap-2 rounded-2xl border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="font-semibold text-ink">{entry.description}</p>
-                      <p className="text-sm text-slate-500">
+                      <p className="font-semibold text-navy-100">{entry.description}</p>
+                      <p className="text-sm text-navy-500">
                         Payment | {formatDateTime(entry.occurredAt)}
                       </p>
                     </div>
-                    <p className="text-sm font-semibold text-brand-700">-{formatCurrency(Math.abs(entry.amountCents))}</p>
+                    <p className="text-sm font-semibold text-sage">-{formatCurrency(Math.abs(entry.amountCents))}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-500">No confirmed payments have been posted to your account yet.</p>
+                <p className="text-sm text-navy-500">No confirmed payments have been posted to your account yet.</p>
               )}
             </div>
           </Card>
 
           <Card className="space-y-4">
-            <h2 className="font-display text-2xl text-ink">Balance activity</h2>
+            <h2 className="font-display text-xl font-semibold text-navy-100">Balance activity</h2>
             <div className="space-y-3">
               {ledgerEntries.length ? (
                 ledgerEntries.map((entry) => (
-                  <div key={entry.id} className="flex flex-col gap-2 rounded-2xl border border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div key={entry.id} className="flex flex-col gap-2 rounded-2xl border border-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="font-semibold text-ink">{entry.description}</p>
-                      <p className="text-sm text-slate-500">
+                      <p className="font-semibold text-navy-100">{entry.description}</p>
+                      <p className="text-sm text-navy-500">
                         {entry.category.replaceAll("_", " ")} | {formatDateTime(entry.occurredAt)}
                       </p>
                     </div>
-                    <p className={`text-sm font-semibold ${entry.amountCents > 0 ? "text-amber-700" : "text-brand-700"}`}>
+                    <p className={`text-sm font-semibold ${entry.amountCents > 0 ? "text-amber-400" : "text-sage"}`}>
                       {entry.amountCents > 0 ? "+" : "-"}
                       {formatCurrency(Math.abs(entry.amountCents))}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-500">No ledger activity yet.</p>
+                <p className="text-sm text-navy-500">No ledger activity yet.</p>
               )}
             </div>
           </Card>
@@ -261,19 +261,19 @@ export default async function MemberAccountPage() {
           <div className="space-y-6">
             <Card className="space-y-4">
               <div className="space-y-1">
-                <h2 className="font-display text-2xl text-ink">Share photos and short videos</h2>
-                <p className="text-sm text-slate-600">
+                <h2 className="font-display text-xl font-semibold text-navy-100">Share photos and short videos</h2>
+                <p className="text-sm text-navy-400">
                   Send pictures and clips from games, practices, and events straight to the club social media review queue.
                 </p>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4">
-                  <p className="text-sm font-medium text-slate-600">Your uploads in this portal</p>
-                  <p className="mt-2 text-3xl font-semibold text-ink">{submittedMediaCount}</p>
+                <div className="rounded-2xl border border-white/5 bg-navy-700/30 px-4 py-4">
+                  <p className="text-sm font-medium text-navy-400">Your uploads in this portal</p>
+                  <p className="mt-2 text-3xl font-semibold text-navy-100">{submittedMediaCount}</p>
                 </div>
-                <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4">
-                  <p className="text-sm font-medium text-slate-600">Waiting for review</p>
-                  <p className="mt-2 text-3xl font-semibold text-ink">{pendingMediaCount}</p>
+                <div className="rounded-2xl border border-white/5 bg-navy-700/30 px-4 py-4">
+                  <p className="text-sm font-medium text-navy-400">Waiting for review</p>
+                  <p className="mt-2 text-3xl font-semibold text-navy-100">{pendingMediaCount}</p>
                 </div>
               </div>
               <MemberMediaUploadForm />
@@ -281,17 +281,17 @@ export default async function MemberAccountPage() {
 
             <Card className="space-y-4">
               <div className="space-y-1">
-                <h2 className="font-display text-2xl text-ink">Your shared media</h2>
-                <p className="text-sm text-slate-600">Track what you have already sent to the social media team.</p>
+                <h2 className="font-display text-xl font-semibold text-navy-100">Your shared media</h2>
+                <p className="text-sm text-navy-400">Track what you have already sent to the social media team.</p>
               </div>
               <div className="space-y-3">
                 {mediaSubmissions.length ? (
                   mediaSubmissions.map((submission) => (
-                    <div key={submission.id} className="rounded-2xl border border-slate-100 p-4">
+                    <div key={submission.id} className="rounded-2xl border border-white/5 p-4">
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div>
-                          <p className="font-semibold text-ink">{submission.title}</p>
-                          <p className="text-sm text-slate-500">
+                          <p className="font-semibold text-navy-100">{submission.title}</p>
+                          <p className="text-sm text-navy-500">
                             {submission.mediaType === MemberMediaType.VIDEO ? "Video" : "Photo"}
                             {submission.eventTitle ? ` | ${submission.eventTitle}` : ""}
                             {` | ${formatDateTime(submission.createdAt)}`}
@@ -299,45 +299,45 @@ export default async function MemberAccountPage() {
                         </div>
                         <Badge className={memberMediaBadgeClassName(submission.status)}>{formatMemberMediaStatus(submission.status)}</Badge>
                       </div>
-                      {submission.caption ? <p className="mt-3 text-sm text-slate-700">{submission.caption}</p> : null}
-                      <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                      {submission.caption ? <p className="mt-3 text-sm text-navy-300">{submission.caption}</p> : null}
+                      <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-navy-400">
                         <span>{formatFileSize(submission.sizeBytes)}</span>
                         {submission.durationSeconds ? <span>{formatDurationSeconds(submission.durationSeconds)}</span> : null}
-                        <a href={submission.filePath} target="_blank" rel="noreferrer" className="font-medium text-brand-700">
+                        <a href={submission.filePath} target="_blank" rel="noreferrer" className="font-medium text-sage">
                           Open file
                         </a>
                       </div>
-                      {submission.notes ? <p className="mt-3 text-sm text-slate-600">Review notes: {submission.notes}</p> : null}
+                      {submission.notes ? <p className="mt-3 text-sm text-navy-400">Review notes: {submission.notes}</p> : null}
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-slate-500">You have not shared any photos or clips yet.</p>
+                  <p className="text-sm text-navy-500">You have not shared any photos or clips yet.</p>
                 )}
               </div>
             </Card>
 
             <Card id="recent-games" className="scroll-mt-28 space-y-4">
-              <h2 className="font-display text-2xl text-ink">Recent games</h2>
+              <h2 className="font-display text-xl font-semibold text-navy-100">Recent games</h2>
               <div className="space-y-3">
                 {participations.length ? (
                   participations.map((participation) => (
-                    <div key={participation.id} className="rounded-2xl border border-slate-100 p-4">
-                      <p className="font-semibold text-ink">{participation.game.title}</p>
-                      <p className="text-sm text-slate-500">
+                    <div key={participation.id} className="rounded-2xl border border-white/5 p-4">
+                      <p className="font-semibold text-navy-100">{participation.game.title}</p>
+                      <p className="text-sm text-navy-500">
                         {participation.game.gameType.name} | {formatDateTime(participation.game.gameDate)}
                       </p>
-                      <p className="mt-2 text-sm text-slate-700">Fee charged: {formatCurrency(participation.feeCents)}</p>
+                      <p className="mt-2 text-sm text-navy-300">Fee charged: {formatCurrency(participation.feeCents)}</p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-slate-500">No games have been recorded for your account yet.</p>
+                  <p className="text-sm text-navy-500">No games have been recorded for your account yet.</p>
                 )}
               </div>
             </Card>
 
             <Card className="space-y-4">
-              <h2 className="font-display text-2xl text-ink">Account details</h2>
-              <div className="space-y-2 text-sm text-slate-700">
+              <h2 className="font-display text-xl font-semibold text-navy-100">Account details</h2>
+              <div className="space-y-2 text-sm text-navy-300">
                 <p>Email: {member.email}</p>
                 <p>Phone: {member.phone ?? "Not provided"}</p>
                 <p>Jersey size: {member.jerseySize ?? "Not provided"}</p>
@@ -358,12 +358,13 @@ function formatMemberMediaStatus(status: MemberMediaStatus) {
 function memberMediaBadgeClassName(status: MemberMediaStatus) {
   switch (status) {
     case MemberMediaStatus.APPROVED:
-      return "bg-brand-50 text-brand-800";
+      return "bg-forest-700/20 text-sage";
     case MemberMediaStatus.REVIEWED:
       return "bg-sky-50 text-sky-700";
     case MemberMediaStatus.ARCHIVED:
-      return "bg-slate-100 text-slate-700";
+      return "bg-slate-100 text-navy-300";
     default:
-      return "bg-amber-50 text-amber-700";
+      return "bg-amber-50 text-amber-400";
   }
 }
+
