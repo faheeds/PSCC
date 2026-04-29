@@ -6,6 +6,7 @@ import { useState } from "react";
 
 const navLinks = [
   { href: "/account",       label: "Portal" },
+  { href: "/league",        label: "🏏 League" },
   { href: "/account/stats", label: "My Stats" },
   { href: "/leaderboard",   label: "Leaderboard" },
   { href: "/podcast",       label: "Podcast" },
@@ -86,3 +87,4 @@ export function MemberHeader({ memberName }: { memberName?: string }) {
     </>
   );
 }
+
