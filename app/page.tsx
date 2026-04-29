@@ -13,7 +13,7 @@ const memberActions = [
   {
     num: "01",
     title: "Practice Check-In",
-    body: "Arrive at the ground, tap check in, and lock your batting order spot. Location-verified so only members at the ground can check in.",
+    body: "Show up, tap check in, and claim your spot in the batting order. GPS-verified — only works when you're at North Robinswood.",
     href: "/account",
     label: "Open check-in",
     color: "forest",
@@ -21,7 +21,7 @@ const memberActions = [
   {
     num: "02",
     title: "Dues & Payments",
-    body: "See your full balance breakdown — club fees, game fees, uniforms, and credits — and pay online instantly via Stripe.",
+    body: "View every charge — season fees, match fees, kit — and settle your balance in seconds. No chasing, no spreadsheets.",
     href: "/account",
     label: "View balance",
     color: "navy",
@@ -29,7 +29,7 @@ const memberActions = [
   {
     num: "03",
     title: "Share Media",
-    body: "Send your best match photos and clips straight to the club social media review queue. Admin reviews and posts to Instagram.",
+    body: "Got a cracking cover drive on camera? Send it straight to the club social queue. Admin reviews and it goes on the 'gram.",
     href: "/account",
     label: "Upload media",
     color: "forest",
