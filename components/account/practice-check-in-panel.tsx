@@ -113,7 +113,7 @@ export function PracticeCheckInPanel({ practices }: PracticeCheckInPanelProps) {
 
   if (!practices.length) {
     return (
-      <div className="rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4 text-sm text-slate-600">
+      <div className="rounded-2xl border border-white/100 bg-navy-700/20 px-4 py-4 text-sm text-navy-400">
         No practice check-in is open right now.
       </div>
     );
@@ -128,31 +128,31 @@ export function PracticeCheckInPanel({ practices }: PracticeCheckInPanelProps) {
         const canCheckIn = practice.checkInConfigured && practice.checkInOpen && !alreadyCheckedIn && !isCancelled;
 
         return (
-          <div key={practice.id} className="rounded-2xl border border-slate-100 p-4">
+          <div key={practice.id} className="rounded-2xl border border-white/100 p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-1">
-                <p className="font-semibold text-ink">{practice.title}</p>
-                <p className="text-sm text-slate-500">
+                <p className="font-semibold text-navy-100">{practice.title}</p>
+                <p className="text-sm text-navy-400">
                   {practice.location} | {formatDateTime(practice.startsAt)} to {formatDateTime(practice.endsAt)}
                 </p>
-                {practice.focusArea ? <p className="text-sm text-slate-700">{practice.focusArea}</p> : null}
+                {practice.focusArea ? <p className="text-sm text-navy-300">{practice.focusArea}</p> : null}
               </div>
               <Badge
-                className={
+                tone={
                   alreadyCheckedIn
-                    ? "bg-brand-50 text-brand-800"
+                    ? "success"
                     : isCancelled
-                      ? "bg-rose-50 text-rose-700"
+                      ? "error"
                       : practice.checkInOpen
-                        ? "bg-amber-50 text-amber-700"
-                        : "bg-slate-100 text-slate-700"
+                        ? "warning"
+                        : "default"
                 }
               >
                 {alreadyCheckedIn ? "Checked in" : isCancelled ? "Canceled" : practice.checkInOpen ? "Open now" : "Opens later"}
               </Badge>
             </div>
 
-            <div className="mt-3 space-y-2 text-sm text-slate-600">
+            <div className="mt-3 space-y-2 text-sm text-navy-400">
               <p>{practice.checkedInMemberCount} member{practice.checkedInMemberCount === 1 ? "" : "s"} already checked in.</p>
               <p>Allowed check-in radius: {formatDistanceMeters(practice.checkInRadiusMeters)}</p>
               {!practice.checkInConfigured ? <p>Check-in is not ready yet because the practice location has not been set.</p> : null}
@@ -181,7 +181,7 @@ export function PracticeCheckInPanel({ practices }: PracticeCheckInPanelProps) {
       })}
 
       {state.error ? <p className="text-sm font-medium text-rose-600">{state.error}</p> : null}
-      {state.success ? <p className="text-sm font-medium text-brand-700">{state.success}</p> : null}
+      {state.success ? <p className="text-sm font-medium text-sage">{state.success}</p> : null}
     </div>
   );
 }
@@ -212,3 +212,4 @@ function mapLocationError(error: GeolocationPositionError) {
 function isGeolocationError(error: unknown): error is GeolocationPositionError {
   return typeof error === "object" && error !== null && "code" in error;
 }
+
