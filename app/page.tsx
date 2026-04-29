@@ -4,9 +4,9 @@ import { ClubLogo } from "@/components/club-logo";
 import { BottomNav } from "@/components/site-header";
 
 const upcomingGames = [
-  { day: "10", month: "May", opponent: "Bellevue CC", venue: "Marymoor Park", time: "10:00 AM", format: "T20" },
+  { day: "10", month: "May", opponent: "Bellevue CC", venue: "North Robinswood Cricket Field", time: "10:00 AM", format: "T20" },
   { day: "17", month: "May", opponent: "Seattle CC", venue: "Lower Woodland Park", time: "9:00 AM", format: "T40" },
-  { day: "24", month: "May", opponent: "Tacoma CC", venue: "Marymoor Park", time: "10:00 AM", format: "T20" },
+  { day: "24", month: "May", opponent: "Tacoma CC", venue: "North Robinswood Cricket Field", time: "10:00 AM", format: "T20" },
 ];
 
 const memberActions = [
@@ -55,6 +55,7 @@ export default function HomePage() {
           <Link href="/about" className="text-navy-300 text-sm hover:text-navy-100 no-underline transition">About</Link>
           <Link href="/podcast" className="text-navy-300 text-sm hover:text-navy-100 no-underline transition">Podcast</Link>
           <Link href="/contact" className="text-navy-300 text-sm hover:text-navy-100 no-underline transition">Contact</Link>
+          <Link href="/admin/dashboard" className="text-navy-400 text-sm hover:text-navy-200 no-underline transition border-l border-white/10 pl-6">Admin Portal</Link>
           <Link href="/account/sign-in" className="bg-forest-700 text-mint text-sm px-4 py-2 rounded-lg border border-forest-600 no-underline font-medium hover:bg-forest-600 transition">
             Member Portal
           </Link>
@@ -116,7 +117,7 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="text-[10px] text-navy-400 uppercase tracking-wider">Next Practice</p>
-                <p className="text-navy-100 text-sm font-medium">Wednesday, May 7 · 6:00 PM · Marymoor Park</p>
+                <p className="text-navy-100 text-sm font-medium">Wednesday, May 7 · 6:00 PM · North Robinswood Cricket Field</p>
               </div>
               <Link href="/account" className="ml-2 bg-forest-700 border border-forest-600 rounded-full px-3 py-1 text-mint text-xs font-medium no-underline hover:bg-forest-600 transition">
                 Check In
@@ -160,7 +161,7 @@ export default function HomePage() {
             Match Day
           </span>
           <p className="text-navy-100 text-sm font-medium">PSCC vs Eastside CC — T20</p>
-          <p className="text-navy-400 text-xs mt-0.5">Apr 20, 2026 · Marymoor Park</p>
+          <p className="text-navy-400 text-xs mt-0.5">Apr 20, 2026 · North Robinswood Cricket Field</p>
         </div>
         <div className="absolute bottom-4 right-4 flex gap-1.5 items-center">
           <div className="w-4 h-1.5 rounded-full bg-sage"/>
@@ -181,7 +182,7 @@ export default function HomePage() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-navy-100 text-sm font-medium">Wednesday Session</p>
-              <p className="text-navy-400 text-xs mt-0.5">6:00 PM · Marymoor Park, Redmond</p>
+              <p className="text-navy-400 text-xs mt-0.5">6:00 PM · North Robinswood Cricket Field, Bellevue</p>
             </div>
             <Link href="/account" className="bg-forest-700 border border-forest-600 rounded-full px-3 py-1.5 text-mint text-xs font-medium no-underline flex-shrink-0">
               Check In
@@ -301,7 +302,7 @@ export default function HomePage() {
             <div>
               <p className="text-forest-200 text-sm uppercase tracking-widest font-semibold mb-1">Next Practice</p>
               <p className="text-white text-2xl font-display">Wednesday, May 7 · 6:00 PM</p>
-              <p className="text-forest-200 mt-0.5">Marymoor Park, Redmond WA</p>
+              <p className="text-forest-200 mt-0.5">North Robinswood Cricket Field, Bellevue WA</p>
             </div>
           </div>
           <Link href="/account" className="bg-white text-forest-800 px-6 py-3 rounded-xl font-bold text-base no-underline hover:bg-forest-50 transition">
@@ -334,3 +335,4 @@ export default function HomePage() {
     </main>
   );
 }
+
