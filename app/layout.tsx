@@ -14,8 +14,18 @@ const bodyFont = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "PSCC Members and Admin Portal",
-  description: "Manage member dues, game fees, reimbursements, and online payments for Puget Sound Cricket Club."
+  title: "PSCC — Puget Sound Cricket Club",
+  description: "Member portal for Puget Sound Cricket Club. Check in for practice, pay dues, and share match photos.",
+  icons: {
+    icon: "/pscc-logo.png",
+    apple: "/pscc-logo.png",
+    shortcut: "/pscc-logo.png",
+  },
+  openGraph: {
+    title: "Puget Sound Cricket Club",
+    description: "Seattle's premier cricket club. Practice check-in, dues, and more.",
+    images: ["/pscc-logo.png"],
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -23,7 +33,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${displayFont.variable} ${bodyFont.variable} font-body`}>
         <div className="min-h-screen">
-          <SiteHeader />
           {children}
         </div>
       </body>
