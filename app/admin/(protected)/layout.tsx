@@ -1,24 +1,39 @@
 import Link from "next/link";
 import { ClubLogo } from "@/components/club-logo";
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireAdmin, getIsFinanceAdmin } from "@/lib/admin-auth";
 
-const navItems = [
+const operationsNav = [
   { href: "/admin/dashboard",      label: "Dashboard" },
   { href: "/admin/members",        label: "Members" },
   { href: "/admin/practices",      label: "Practices" },
   { href: "/admin/games",          label: "Games" },
   { href: "/admin/scorecards",     label: "Scorecards" },
   { href: "/admin/grounds",        label: "Grounds" },
-  { href: "/admin/ledger",         label: "Ledger" },
   { href: "/admin/equipment",      label: "Equipment" },
   { href: "/admin/social",         label: "Social Media" },
   { href: "/admin/communications", label: "Comms" },
   { href: "/admin/tasks",          label: "Tasks" },
-  { href: "/admin/reimbursements", label: "Reimbursements" },
+  { href: "/admin/reimbursements", label: "My Expenses" },
+];
+
+const financeNav = [
+  { href: "/admin/finance/dues",            label: "Dues Management" },
+  { href: "/admin/finance/reimbursements",  label: "Approve Expenses" },
+  { href: "/admin/ledger",                  label: "Ledger" },
 ];
 
 export default async function AdminProtectedLayout({ children }: { children: React.ReactNode }) {
   await requireAdmin();
+  const isFinance = await getIsFinanceAdmin();
+
+  const NavLink = ({ href, label }: { href: string; label: string }) => (
+    <Link
+      href={href}
+      className="flex items-center px-3 py-2.5 rounded-xl text-navy-300 text-sm no-underline hover:bg-white/5 hover:text-navy-100 transition"
+    >
+      {label}
+    </Link>
+  );
 
   return (
     <div className="min-h-screen bg-navy-900 flex">
@@ -35,16 +50,28 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
           </div>
         </div>
 
-        <nav className="flex-1 py-4 px-3 space-y-0.5">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-navy-300 text-sm no-underline hover:bg-white/5 hover:text-navy-100 transition"
-            >
-              {item.label}
-            </Link>
-          ))}
+        <nav className="flex-1 py-4 px-3 space-y-4 overflow-y-auto">
+          {/* Operations section */}
+          <div>
+            <p className="text-[9px] font-semibold uppercase tracking-widest text-navy-600 px-3 mb-1">Operations</p>
+            <div className="space-y-0.5">
+              {operationsNav.map((item) => (
+                <NavLink key={item.href} href={item.href} label={item.label} />
+              ))}
+            </div>
+          </div>
+
+          {/* Finance section - only visible to finance admins */}
+          {isFinance && (
+            <div>
+              <p className="text-[9px] font-semibold uppercase tracking-widest text-amber-500/70 px-3 mb-1">Finance</p>
+              <div className="space-y-0.5">
+                {financeNav.map((item) => (
+                  <NavLink key={item.href} href={item.href} label={item.label} />
+                ))}
+              </div>
+            </div>
+          )}
         </nav>
 
         <div className="px-5 py-4 border-t border-white/5 space-y-2">
@@ -65,12 +92,15 @@ export default async function AdminProtectedLayout({ children }: { children: Rea
           <Link href="/" className="text-navy-400 text-xs no-underline">← Site</Link>
         </div>
         <div className="flex gap-1 overflow-x-auto px-4 pb-3 scrollbar-hide">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex-shrink-0 bg-navy-700/60 border border-white/5 text-navy-300 text-xs px-3 py-1.5 rounded-full no-underline hover:text-navy-100 transition whitespace-nowrap"
-            >
+          {operationsNav.map((item) => (
+            <Link key={item.href} href={item.href}
+              className="flex-shrink-0 bg-navy-700/60 border border-white/5 text-navy-300 text-xs px-3 py-1.5 rounded-full no-underline hover:text-navy-100 transition whitespace-nowrap">
+              {item.label}
+            </Link>
+          ))}
+          {isFinance && financeNav.map((item) => (
+            <Link key={item.href} href={item.href}
+              className="flex-shrink-0 bg-amber-900/20 border border-amber-500/20 text-amber-400 text-xs px-3 py-1.5 rounded-full no-underline hover:text-amber-300 transition whitespace-nowrap">
               {item.label}
             </Link>
           ))}
