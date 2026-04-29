@@ -1,12 +1,11 @@
-import { CredentialsSignInForm } from "@/components/auth/credentials-sign-in-form";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { ClubLogo } from "@/components/club-logo";
 import { env } from "@/lib/env";
 
 const errorMessages: Record<string, string> = {
   GoogleAdminNotAllowlisted:
-    "That Google account is not on the admin allowlist. Add the email to ADMIN_ALLOWED_EMAILS before using it for admin access.",
-  GoogleAdminSessionFailed: "We could not finish the Google admin sign-in. Please try again.",
+    "That Google account is not on the admin allowlist. Contact the club administrator to get access.",
+  GoogleAdminSessionFailed: "Sign-in failed. Please try again.",
 };
 
 export default async function AdminSignInPage(props: {
@@ -18,7 +17,6 @@ export default async function AdminSignInPage(props: {
 
   return (
     <main className="min-h-screen bg-navy-900 flex items-center justify-center px-4">
-
       <div className="w-full max-w-sm space-y-6">
 
         {/* Logo + title */}
@@ -43,22 +41,17 @@ export default async function AdminSignInPage(props: {
             </div>
           )}
 
-          {googleEnabled && (
-            <>
-              <GoogleSignInButton callbackUrl="/admin/auth/complete" portal="admin" />
-              <div className="flex items-center gap-3">
-                <span className="h-px flex-1 bg-white/10"/>
-                <span className="text-navy-500 text-xs uppercase tracking-widest">or</span>
-                <span className="h-px flex-1 bg-white/10"/>
-              </div>
-            </>
+          {googleEnabled ? (
+            <GoogleSignInButton callbackUrl="/admin/auth/complete" portal="admin" />
+          ) : (
+            <p className="text-center text-navy-500 text-sm">
+              Google sign-in is not configured. Contact the system administrator.
+            </p>
           )}
 
-          <CredentialsSignInForm
-            provider="admin-credentials"
-            redirectTo="/admin/dashboard"
-            submitLabel="Sign in to admin"
-          />
+          <p className="text-center text-navy-600 text-xs pt-1">
+            Only allowlisted Google accounts can access the admin portal.
+          </p>
         </div>
 
         {/* Footer */}
