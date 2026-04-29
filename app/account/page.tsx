@@ -297,7 +297,7 @@ export default async function MemberAccountPage() {
                             {` | ${formatDateTime(submission.createdAt)}`}
                           </p>
                         </div>
-                        <Badge className={memberMediaBadgeClassName(submission.status)}>{formatMemberMediaStatus(submission.status)}</Badge>
+                        <Badge tone={memberMediaBadgeClassName(submission.status)}>{formatMemberMediaStatus(submission.status)}</Badge>
                       </div>
                       {submission.caption ? <p className="mt-3 text-sm text-navy-300">{submission.caption}</p> : null}
                       <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-navy-400">
@@ -355,16 +355,17 @@ function formatMemberMediaStatus(status: MemberMediaStatus) {
   return status.charAt(0) + status.slice(1).toLowerCase();
 }
 
-function memberMediaBadgeClassName(status: MemberMediaStatus) {
+function memberMediaBadgeClassName(status: MemberMediaStatus): "success" | "default" | "warning" | "error" {
   switch (status) {
     case MemberMediaStatus.APPROVED:
-      return "bg-forest-700/20 text-sage";
+      return "success";
     case MemberMediaStatus.REVIEWED:
-      return "bg-sky-50 text-sky-700";
+      return "default";
     case MemberMediaStatus.ARCHIVED:
-      return "bg-slate-100 text-navy-300";
+      return "default";
     default:
-      return "bg-amber-50 text-amber-400";
+      return "warning";
   }
 }
+
 
