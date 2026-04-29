@@ -159,17 +159,17 @@ export default async function SocialMediaAdminPage() {
                       {item.eventTitle ? ` | ${item.eventTitle}` : ""}
                       {item.capturedAt ? ` | ${formatDateTime(item.capturedAt)}` : ""}
                     </p>
-                    <p className="mt-2 text-sm text-slate-700">
+                    <p className="mt-2 text-sm text-navy-300">
                       {item.createdBy?.name ?? "No owner assigned"}
                       {item.platforms ? ` | ${item.platforms}` : ""}
                     </p>
                   </div>
-                  <div className="text-sm text-slate-700">
+                  <div className="text-sm text-navy-300">
                     <p>Status: {item.status.replaceAll("_", " ")}</p>
                     <p>{item.postedAt ? `Posted ${formatDateTime(item.postedAt)}` : item.scheduledFor ? `Scheduled ${formatDateTime(item.scheduledFor)}` : "Not scheduled yet"}</p>
                   </div>
                 </div>
-                {item.caption ? <p className="mt-3 text-sm text-slate-700">{item.caption}</p> : null}
+                {item.caption ? <p className="mt-3 text-sm text-navy-300">{item.caption}</p> : null}
                 {item.sourceUrl ? (
                   <a href={item.sourceUrl} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium">
                     Open source media
@@ -215,10 +215,10 @@ export default async function SocialMediaAdminPage() {
                           {submission.mediaType === MemberMediaType.VIDEO ? "Video" : "Photo"} | Shared {formatDateTime(submission.createdAt)}
                         </p>
                       </div>
-                      <Badge className={memberMediaBadgeClassName(submission.status)}>{formatMemberMediaStatus(submission.status)}</Badge>
+                      <Badge tone={memberMediaBadgeClassName(submission.status)}>{formatMemberMediaStatus(submission.status)}</Badge>
                     </div>
 
-                    {submission.caption ? <p className="text-sm text-slate-700">{submission.caption}</p> : null}
+                    {submission.caption ? <p className="text-sm text-navy-300">{submission.caption}</p> : null}
 
                     <div className="flex flex-wrap gap-3 text-sm text-slate-600">
                       <span>{formatFileSize(submission.sizeBytes)}</span>
@@ -237,7 +237,7 @@ export default async function SocialMediaAdminPage() {
                       ) : (
                         <p>Not reviewed yet.</p>
                       )}
-                      {submission.notes ? <p className="mt-1 text-slate-700">Notes: {submission.notes}</p> : null}
+                      {submission.notes ? <p className="mt-1 text-navy-300">Notes: {submission.notes}</p> : null}
                     </div>
 
                     <form action={reviewMemberSubmission} className="grid gap-3 md:grid-cols-[180px_1fr_auto]">
@@ -277,15 +277,16 @@ function formatMemberMediaStatus(status: MemberMediaStatus) {
   return status.charAt(0) + status.slice(1).toLowerCase();
 }
 
-function memberMediaBadgeClassName(status: MemberMediaStatus) {
+function memberMediaBadgeClassName(status: MemberMediaStatus): "success" | "default" | "warning" | "error" {
   switch (status) {
     case MemberMediaStatus.APPROVED:
-      return "bg-brand-50 text-brand-800";
+      return "success";
     case MemberMediaStatus.REVIEWED:
-      return "bg-sky-50 text-sky-700";
+      return "default";
     case MemberMediaStatus.ARCHIVED:
-      return "bg-slate-100 text-slate-700";
+      return "bg-slate-100 text-navy-300";
     default:
       return "bg-amber-50 text-amber-700";
   }
 }
+
