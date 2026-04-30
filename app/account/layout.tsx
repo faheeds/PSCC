@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { MemberHeader } from "@/components/member-header";
+import { NotificationBell } from "@/components/notification-bell";
 import { BottomNav } from "@/components/site-header";
 import { prisma } from "@/lib/db";
 
@@ -17,7 +18,7 @@ export default async function AccountLayout({ children }: { children: React.Reac
 
   return (
     <div className="min-h-screen bg-navy-900">
-      <MemberHeader memberName={memberName} />
+      <MemberHeader memberName={memberName} notificationBell={<NotificationBell />} />
       <div className="pb-24">
         {children}
       </div>
