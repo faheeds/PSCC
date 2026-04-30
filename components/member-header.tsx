@@ -1,3 +1,4 @@
+import React from "react";
 "use client";
 
 import Link from "next/link";
@@ -14,7 +15,7 @@ const navLinks = [
   { href: "/contact",       label: "Contact" },
 ];
 
-export function MemberHeader({ memberName }: { memberName?: string }) {
+export function MemberHeader({ memberName, notificationBell }: { memberName?: string; notificationBell?: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -44,6 +45,9 @@ export function MemberHeader({ memberName }: { memberName?: string }) {
 
           {/* Right side - name + hamburger */}
           <div className="ml-auto flex items-center gap-3">
+            {notificationBell && (
+              <div className="hidden sm:block">{notificationBell}</div>
+            )}
             {memberName && (
               <span className="text-navy-400 text-xs hidden sm:block truncate max-w-32">{memberName}</span>
             )}
