@@ -26,7 +26,9 @@
     "stripe": "^18.1.0",
     "tailwind-merge": "^3.3.0",
     "xlsx": "^0.18.5",
-    "zod": "^3.24.4"
+    "zod": "^3.24.4",
+    "firebase": "^10.7.1",
+    "firebase-admin": "^12.0.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.10",
