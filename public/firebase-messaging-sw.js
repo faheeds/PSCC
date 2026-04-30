@@ -5,12 +5,12 @@ importScripts("https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-comp
 
 // Config will be injected via query param or use defaults
 const firebaseConfig = self.__FIREBASE_CONFIG__ || {
-  apiKey: self.FIREBASE_API_KEY,
+  apiKey: "AIzaSyAHt7kSsNnR7dvlp87yzSzghocXEuFrZXg",
   authDomain: "pscc-fd46b.firebaseapp.com",
   projectId: "pscc-fd46b",
-  storageBucket: "pscc-fd46b.appspot.com",
+  storageBucket: "pscc-fd46b.firebasestorage.app",
   messagingSenderId: "539230006518",
-  appId: self.FIREBASE_APP_ID,
+  appId: "1:539230006518:web:5c8d73cbebe3809dacd0d7",
 };
 
 firebase.initializeApp(firebaseConfig);
