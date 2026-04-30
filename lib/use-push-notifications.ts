@@ -2,6 +2,15 @@
 
 import { useEffect, useState } from "react";
 
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAHt7kSsNnR7dvlp87yzSzghocXEuFrZXg",
+  authDomain: "pscc-fd46b.firebaseapp.com",
+  projectId: "pscc-fd46b",
+  storageBucket: "pscc-fd46b.firebasestorage.app",
+  messagingSenderId: "539230006518",
+  appId: "1:539230006518:web:5c8d73cbebe3809dacd0d7",
+};
+
 const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || "";
 
 export function usePushNotifications() {
@@ -21,34 +30,47 @@ export function usePushNotifications() {
     setIsLoading(true);
     setError(null);
     try {
-      // Dynamically import Firebase to avoid SSR issues
-      const { initializeApp, getApps } = await import("firebase/app");
+      // Step 1: Request notification permission
+      const perm = await Notification.requestPermission();
+      setPermission(perm);
+      if (perm !== "granted") {
+        setError("Notification permission denied");
+        return;
+      }
+
+      // Step 2: Register service worker explicitly
+      const swReg = await navigator.serviceWorker.register("/firebase-messaging-sw.js", {
+        scope: "/",
+      });
+      await navigator.serviceWorker.ready;
+
+      // Step 3: Init Firebase
+      const { initializeApp, getApps, getApp } = await import("firebase/app");
+      const app = getApps().length === 0 ? initializeApp(FIREBASE_CONFIG) : getApp();
+
+      // Step 4: Get FCM token using the registered SW
       const { getMessaging, getToken } = await import("firebase/messaging");
+      const messaging = getMessaging(app);
+      const token = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: swReg,
+      });
 
-      if (!getApps().length) {
-        initializeApp({
-          apiKey: "AIzaSyAHt7kSsNnR7dvlp87yzSzghocXEuFrZXg",
-          authDomain: "pscc-fd46b.firebaseapp.com",
-          projectId: "pscc-fd46b",
-          storageBucket: "pscc-fd46b.firebasestorage.app",
-          messagingSenderId: "539230006518",
-          appId: "1:539230006518:web:5c8d73cbebe3809dacd0d7",
-        });
+      if (!token) {
+        setError("Failed to get notification token. Check browser permissions.");
+        return;
       }
 
-      const messaging = getMessaging();
-      const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+      // Step 5: Save token to server
+      await fetch("/api/notifications/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, platform: "web" }),
+      });
 
-      if (token) {
-        await fetch("/api/notifications/subscribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, platform: "web" }),
-        });
-        setIsSubscribed(true);
-        setPermission("granted");
-      }
+      setIsSubscribed(true);
     } catch (err: any) {
+      console.error("Push notification error:", err);
       setError(err?.message || "Failed to enable notifications");
     } finally {
       setIsLoading(false);
@@ -58,9 +80,10 @@ export function usePushNotifications() {
   async function unsubscribe() {
     setIsLoading(true);
     try {
-      const { getMessaging, deleteToken } = await import("firebase/messaging");
-      const messaging = getMessaging();
-      const token = await (await import("firebase/messaging")).getToken(messaging, { vapidKey: VAPID_KEY });
+      const { getMessaging, getToken, deleteToken } = await import("firebase/messaging");
+      const { getApp } = await import("firebase/app");
+      const messaging = getMessaging(getApp());
+      const token = await getToken(messaging, { vapidKey: VAPID_KEY });
       if (token) {
         await fetch("/api/notifications/subscribe", {
           method: "DELETE",
@@ -70,14 +93,19 @@ export function usePushNotifications() {
         await deleteToken(messaging);
       }
       setIsSubscribed(false);
+      setPermission("default");
     } catch (err) {
-      // ignore
+      console.error("Unsubscribe error:", err);
     } finally {
       setIsLoading(false);
     }
   }
 
-  const isSupported = typeof window !== "undefined" && "Notification" in window && "serviceWorker" in navigator;
+  const isSupported =
+    typeof window !== "undefined" &&
+    "Notification" in window &&
+    "serviceWorker" in navigator &&
+    "PushManager" in window;
 
   return { permission, isSubscribed, isLoading, error, subscribe, unsubscribe, isSupported };
 }
